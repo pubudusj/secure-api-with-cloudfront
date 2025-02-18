@@ -45,14 +45,16 @@ def update_cloudfront_header(secret):
     print("Update initiated. New ETag:", update_response["ETag"])
 
 
-def lambda_handler(event, context):
-    # Update the secure header value with random value
-    secret = secrets.token_urlsafe(SECRET_LENGTH)
-    update_cloudfront_header(secret)
-
-    # Update the secure header value in SSM Parameter Store
+def update_parameter(secret):
     ssm.put_parameter(
         Name=SSM_PARAMETER_NAME,
         Value=secret,
         Overwrite=True,
     )
+
+
+def lambda_handler(event, context):
+    # Update the secure header value with random value
+    secret = secrets.token_urlsafe(SECRET_LENGTH)
+    update_cloudfront_header(secret)
+    update_parameter(secret)
