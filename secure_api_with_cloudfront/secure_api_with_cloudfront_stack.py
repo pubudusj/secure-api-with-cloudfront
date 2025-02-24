@@ -166,7 +166,7 @@ class SecureApiWithCloudfrontStack(Stack):
             )
         )
 
-        # IAM Role for the S3 deployment
+        # IAM Role for custom resource
         custom_resource_role = iam.Role(
             scope=self,
             id="CustomResourceRole",
@@ -202,7 +202,7 @@ class SecureApiWithCloudfrontStack(Stack):
             role=custom_resource_role,
         )
 
-        # AWS EventBridge scheduler to update the secure header every 24 hours
+        # AWS EventBridge scheduler to update the secure header every 6 hours
         scheduler_role = iam.Role(
             self,
             "SchedulerRole",
@@ -221,7 +221,8 @@ class SecureApiWithCloudfrontStack(Stack):
             "Schedule",
             schedule=scheduler.ScheduleExpression.rate(Duration.hours(6)),
             target=targets.LambdaInvoke(update_secure_header, role=scheduler_role),
-            description="Schedule to trigger update header lambda function every hour.",
+            description="Schedule to trigger update header lambda function every 6 hours.",
         )
+
         # Output
         CfnOutput(self, "CloudfrontUrl", value=cloudfront_distribution.domain_name)
