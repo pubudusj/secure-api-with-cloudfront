@@ -100,7 +100,7 @@ class SecureApiWithCloudfrontStack(Stack):
             "LambdaHeaderAuthorizer",
             handler=custom_authorizer,
             identity_sources=[apigateway.IdentitySource.header(custom_header_key)],
-            results_cache_ttl=Duration.seconds(30),
+            results_cache_ttl=Duration.minutes(5),
         )
 
         # add method to /hello api

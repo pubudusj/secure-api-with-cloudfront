@@ -27,7 +27,7 @@ def update_cloudfront_header(secret):
         if origin["DomainName"] == APIGATEWAY_DOMAIN:
             custom_headers = origin.get("CustomHeaders", {"Quantity": 0, "Items": []})
             for header in custom_headers.get("Items", []):
-                if header["HeaderName"].lower() == CUSTOM_HEADER_KEY:
+                if header["HeaderName"].lower() == CUSTOM_HEADER_KEY.lower():
                     header["HeaderValue"] = secret
                     break
 
